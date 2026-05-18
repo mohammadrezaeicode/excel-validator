@@ -25,7 +25,7 @@ jobs:
 
     - name: Validate Excel files
       run: |
-        for file in samples/*.xlsx
+        for file in file/*.xlsx
         do
           echo "Checking $file"
           dotnet run --project . "$file"
