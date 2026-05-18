@@ -1,0 +1,72 @@
+# Build results
+bin/
+obj/
+
+# User-specific files
+*.user
+*.rsuser
+*.suo
+
+# Visual Studio
+.vs/
+
+# Rider
+.idea/
+
+# VS Code
+.vscode/
+
+# Logs
+*.log
+
+# NuGet
+*.nupkg
+packages/
+.nuget/
+
+# Publish output
+publish/
+
+# Test results
+TestResults/
+
+# Coverage
+coverage/
+*.coverage
+*.coveragexml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.*
+
+# Temporary files
+*.tmp
+*.temp
+
+# Generated files
+Generated/
+
+# Resharper
+_ReSharper*/
+*.DotSettings.user
+
+# Azure
+*.azurePubxml
+
+# Local history
+.localhistory/
+
+# SQLite
+*.db
+*.sqlite
+
+# Backup files
+*.bak
+*.backup
+
+# JetBrains Rider
+*.sln.iml

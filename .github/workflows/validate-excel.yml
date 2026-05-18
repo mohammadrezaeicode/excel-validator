@@ -1,0 +1,32 @@
+name: Validate Excel
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: 8.0.x
+
+    - name: Restore packages
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet build --configuration Release
+
+    - name: Validate Excel files
+      run: |
+        for file in samples/*.xlsx
+        do
+          echo "Checking $file"
+          dotnet run --project . "$file"
+        done
