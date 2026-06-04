@@ -1,0 +1,8 @@
+services:
+  excel-to-image:
+    build: .
+    ports:
+      - "5050:8080"
+    volumes:
+      - ./file:/file  
+    restart: unless-stopped
