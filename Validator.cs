@@ -129,5 +129,20 @@ namespace App.utils
 
         return "SUCCESS: Excel file is valid.";
     }
+    public static bool IsExcelFileValid(MemoryStream stream)
+    {
+        try
+        {
+
+            using (SpreadsheetDocument.Open(stream, false))
+            {
+                return true;
+            }
+        }
+        catch
+        {
+            return false;
+        }
+    }
 } 
 }
