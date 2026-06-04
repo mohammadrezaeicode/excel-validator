@@ -81,8 +81,13 @@ app.MapPost("/validate", async (IFormFile file) =>
 })
 .DisableAntiforgery();
 
-app.MapPost("/convert", async (IFormFile file) =>
+app.MapPost("/convert", async (IFormFile file, HttpContext ctx) =>
 {
+    bool empty = false;
+    if (ctx.Request.Query.TryGetValue("empty", out var val))
+    {
+        empty = val != "0" && val != "false";
+    }
     // ── 1. Basic file checks ──────────────────────────────────────────────
     if (file is null || file.Length == 0)
         return Results.BadRequest(new { error = "No file uploaded." });
@@ -122,12 +127,11 @@ app.MapPost("/convert", async (IFormFile file) =>
                     return Results.BadRequest(new { error = "Excel file has no worksheets." });
 
                 var ws = package.Workbook.Worksheets[0];
-                if (ws.Dimension is null)
+                if (ws.Dimension is null && !empty)
                     return Results.BadRequest(new { error = $"Sheet '{ws.Name}' is completely empty — nothing to render." });
             }
         }
         catch{}
-
         // ── 5. Convert via LibreOffice ────────────────────────────────────
         var userProfile = Path.Combine(Path.GetTempPath(), $"lo_{Guid.NewGuid()}");
         Directory.CreateDirectory(userProfile);
@@ -166,7 +170,7 @@ app.MapPost("/convert", async (IFormFile file) =>
         }
 
         var imageInfo = new FileInfo(outputPath);
-        if (imageInfo.Length < 1024)
+        if (imageInfo.Length < 1024&&!empty)
         {
             File.Delete(outputPath);
             return Results.BadRequest(new { error = $"Rendered image is suspiciously small ({imageInfo.Length} B) — sheet may be blank or corrupt." });
