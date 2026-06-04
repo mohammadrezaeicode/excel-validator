@@ -113,16 +113,20 @@ app.MapPost("/convert", async (IFormFile file) =>
             return Results.BadRequest(new { error = "File is corrupt or not a valid .xlsx (invalid file header)." });
 
         // ── 4. Validate with EPPlus ───────────────────────────────────────
-        ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-        using (var package = new ExcelPackage(new FileInfo(inputPath)))
+        try
         {
-            if (package.Workbook.Worksheets.Count == 0)
-                return Results.BadRequest(new { error = "Excel file has no worksheets." });
+            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+            using (var package = new ExcelPackage(new FileInfo(inputPath)))
+            {
+                if (package.Workbook.Worksheets.Count == 0)
+                    return Results.BadRequest(new { error = "Excel file has no worksheets." });
 
-            var ws = package.Workbook.Worksheets[0];
-            if (ws.Dimension is null)
-                return Results.BadRequest(new { error = $"Sheet '{ws.Name}' is completely empty — nothing to render." });
+                var ws = package.Workbook.Worksheets[0];
+                if (ws.Dimension is null)
+                    return Results.BadRequest(new { error = $"Sheet '{ws.Name}' is completely empty — nothing to render." });
+            }
         }
+        catch{}
 
         // ── 5. Convert via LibreOffice ────────────────────────────────────
         var userProfile = Path.Combine(Path.GetTempPath(), $"lo_{Guid.NewGuid()}");
