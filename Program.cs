@@ -13,7 +13,7 @@ app.MapGet(
     "/health",
     async () =>
     {
-        return Results.Ok();
+        return Results.Ok("healthy");
     }
 );
 
